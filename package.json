@@ -1,0 +1,98 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-native-background-timer",
+        "scope": null,
+        "escapedName": "react-native-background-timer",
+        "name": "react-native-background-timer",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "E:\\2nd Start\\SrvrSide\\Downloadnpm"
+    ]
+  ],
+  "_from": "react-native-background-timer@latest",
+  "_id": "react-native-background-timer@2.0.1",
+  "_inCache": true,
+  "_location": "/react-native-background-timer",
+  "_nodeVersion": "8.9.4",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/react-native-background-timer_2.0.1_1519899340514_0.07865998558564402"
+  },
+  "_npmUser": {
+    "name": "ocetnik",
+    "email": "ocetnik.david@gmail.com"
+  },
+  "_npmVersion": "5.6.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-background-timer",
+    "scope": null,
+    "escapedName": "react-native-background-timer",
+    "name": "react-native-background-timer",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-background-timer/-/react-native-background-timer-2.0.1.tgz",
+  "_shasum": "ef714a4bfd28fc47cbbd335631b581cf915604a2",
+  "_shrinkwrap": null,
+  "_spec": "react-native-background-timer",
+  "_where": "E:\\2nd Start\\SrvrSide\\Downloadnpm",
+  "author": {
+    "name": "David Ocetnik"
+  },
+  "bugs": {
+    "url": "https://github.com/ocetnik/react-native-background-timer/issues"
+  },
+  "dependencies": {},
+  "description": "Emit event periodically (even when app is in the background)",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-1owXTUQh1Ox/CrAMP/pjPzO9X4mGlbEklZ7eDjYhycVVzAbXcpHCaV/VZUhxRj8+ne+/3EUydG7G3N5iUW9e4g==",
+    "shasum": "ef714a4bfd28fc47cbbd335631b581cf915604a2",
+    "tarball": "https://registry.npmjs.org/react-native-background-timer/-/react-native-background-timer-2.0.1.tgz",
+    "fileCount": 13,
+    "unpackedSize": 26499
+  },
+  "gitHead": "23d60b1d2cad94bf8bb077a44e3357066687d984",
+  "homepage": "https://github.com/ocetnik/react-native-background-timer#readme",
+  "keywords": [
+    "android",
+    "ios",
+    "react-component",
+    "react-native",
+    "timer"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "ocetnik",
+      "email": "ocetnik.david@gmail.com"
+    }
+  ],
+  "name": "react-native-background-timer",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.47.0"
+  },
+  "readme": "# React Native Background Timer\nEmit event periodically (even when app is in the background).\n\n## Installation\n- `npm i react-native-background-timer --save`\n- `react-native link`\n\n### Installation using CocoaPods on iOS\n- `npm i react-native-background-timer --save`\n- add the following to your Podfile: `pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'`\n\n## Usage Crossplatform\nTo use the same code both on Android and iOS use runBackgroundTimer() and stopBackgroundTimer(). There can be used only one background timer to keep code consistent.\n\n```javascript\nBackgroundTimer.runBackgroundTimer(() => { \n//code that will be called every 3 seconds \n}, \n3000);\n//rest of code will be performing for iOS on background too\n\nBackgroundTimer.stopBackgroundTimer(); //after this call all code on background stop run.\n```\n> Android didn't tested as well.\n\n## Usage iOS\nAfter iOS update logic of background task little bit changed. So we can't use as it was. \nYou have to use only start() and stop() without parameters. And all code that is performing will continue performing on background including all setTimeout() timers.\n\nExample:\n```javascript\nBackgroundTimer.start();\n// Do whatever you want incuding setTimeout;\nBackgroundTimer.stop();\n```\n\n> If you call stop() on background no new tasks will be started!\n> Don't call .start() twice, as it stop performing previous background task and starts new. \n> If it will be called on backgound no tasks will run.\n\n## Usage Android\nYou can use the `setInterval` and `setTimeout` functions.\nThis API is identical to that of `react-native` and can be used to quickly replace existing timers\nwith background timers.\n\n```javascript\nimport BackgroundTimer from 'react-native-background-timer';\n```\n\n```javascript\n// Start a timer that runs continuous after X milliseconds\nconst intervalId = BackgroundTimer.setInterval(() => {\n\t// this will be executed every 200 ms\n\t// even when app is the the background\n\tconsole.log('tic');\n}, 200);\n\n// Cancel the timer when you are done with it\nBackgroundTimer.clearInterval(intervalId);\n```\n\n```javascript\n// Start a timer that runs once after X milliseconds\nconst timeoutId = BackgroundTimer.setTimeout(() => {\n\t// this will be executed once after 10 seconds\n\t// even when app is the the background\n  \tconsole.log('tac');\n}, 10000);\n\n// Cancel the timeout if necessary\nBackgroundTimer.clearTimeout(timeoutId);\n```\n\n### Obsolete\nObsolete usage which doesn't allows to use multiple background timers.\n\n```js\nimport {\n  DeviceEventEmitter,\n  NativeAppEventEmitter,\n  Platform,\n} from 'react-native';\n\nimport BackgroundTimer from 'react-native-background-timer';\n```\n\n```js\nconst EventEmitter = Platform.select({\n  ios: () => NativeAppEventEmitter,\n  android: () => DeviceEventEmitter,\n})();\n```\n\n```js\n// start a global timer\nBackgroundTimer.start(5000); // delay in milliseconds only for Android\n```\n```js\n// listen for event\nEventEmitter.addListener('backgroundTimer', () => {\n\t// this will be executed once after 5 seconds\n\tconsole.log('toe');\n});\n```\n```js\n// stop the timer\nBackgroundTimer.stop();\n```\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ocetnik/react-native-background-timer.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "2.0.1"
+}
